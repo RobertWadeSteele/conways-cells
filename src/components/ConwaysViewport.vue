@@ -1,6 +1,8 @@
 <script setup lang='ts'>
-  import { onMounted } from 'vue'
-  import { ConwaysCellsGame } from '../models/ConwaysCellsGame'
+  import { onMounted, inject } from 'vue'
+  import type { ConwaysGameOfLife } from '../models/ConwaysGameOfLife'
+  
+  import mitt from 'mitt'
 
   let canvas: HTMLCanvasElement;
   let context: CanvasRenderingContext2D;
@@ -8,27 +10,57 @@
   let zoom: number = 50;
   let squareSize: number;
 
-  let game: ConwaysCellsGame
+  const game: ConwaysGameOfLife = inject('conwayGame') as ConwaysGameOfLife
+
+  const emitter: any = inject('conwayEmitter')
+
+  let isRunning: boolean = inject('isRunning')
+
+  emitter.on('tick-once', (event: any) => {
+    console.log('ticking once: ', event)
+    tickOnce()
+    
+  })
+
+  emitter.on('toggle-run', (event: any) => {
+    console.log('running: ', event)
+    isRunning = !isRunning
+    if (isRunning) {
+      runLoop()
+    }
+  })
+
+  function runLoop() {
+    tickOnce()
+    setTimeout(() => {
+      if (isRunning) {
+        runLoop()
+        }
+    }, 250)
+  }
+
+  function tickOnce() {
+    game.tick()
+    drawBoard()
+  }
 
   onMounted(() => {
-    game = new ConwaysCellsGame()
-
     canvas = document.getElementById('conway-viewport') as HTMLCanvasElement;
     context = canvas.getContext('2d') as CanvasRenderingContext2D;
 
     window.addEventListener('resize', resizeCanvas)
     resizeCanvas();
-  });
+  })
 
   function drawBoard() {
-    let cells = game.getLiveCells()
     context.clearRect(0, 0, canvas.width, canvas.height)
     context.beginPath()
-    cells.forEach(cell => {
-      context.rect(cell.x * squareSize, cell.getY() * squareSize, squareSize, squareSize);
+    game.cells.forEach(cell => {
+      context.rect(cell.x * squareSize, cell.y * squareSize, squareSize, squareSize);
       context.fillStyle="white"
       context.fill()
     })
+    console.log('drawn')
   }
 
   function resizeCanvas() {
@@ -39,7 +71,6 @@
   }
 
   function handleClick(event: MouseEvent) {
-    console.log(event)
     const rect = canvas.getBoundingClientRect()
     let x = Math.floor((event.clientX - rect.left) / squareSize)
     let y = Math.floor((event.clientY - rect.top) / squareSize)
@@ -52,7 +83,7 @@
   <canvas id="conway-viewport" @click="handleClick($event)"></canvas>
 </template>
 
-<style lang="css" scoped>
+<style>
   #conway-viewport {
     width: 100%;
     height: 100%;

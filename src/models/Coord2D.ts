@@ -8,7 +8,7 @@ export class Coord2D {
     this.y = y
   }
 
-  neighbors(): Coord2D[] {
-    return []
+  toKey(): string {
+    return `(${this.x}, ${this.y})`
   }
 }

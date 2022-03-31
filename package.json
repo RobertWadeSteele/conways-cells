@@ -11,6 +11,7 @@
   "dependencies": {
     "@volar/pug-language-service": "^0.33.7",
     "@volar/typescript-language-service": "^0.33.7",
+    "mitt": "^3.0.0",
     "vue": "^3.2.31",
     "vue-router": "^4.0.12"
   },

@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -11,7 +12,7 @@ const router = createRouter({
     {
       path: '/conwayscells',
       name: 'conwayscells',
-      component: () => import('../views/ConwayView.vue')
+      component: () => import('../views/ConwaysView.vue')
     },
     {
       path: '/about',
