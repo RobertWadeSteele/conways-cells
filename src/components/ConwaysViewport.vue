@@ -2,8 +2,13 @@
   import { onMounted, inject } from 'vue'
   import { ConwaysGameOfLife } from '../models/ConwaysGameOfLife'
   
-  let canvas: HTMLCanvasElement;
-  let context: CanvasRenderingContext2D;
+  let canvas: HTMLCanvasElement
+  let context: CanvasRenderingContext2D
+
+  onMounted(() => {
+    canvas = document.getElementById('conway-viewport') as HTMLCanvasElement
+    context = canvas.getContext("2d")!
+  })
 
   let squareSize: number;
 
@@ -21,11 +26,14 @@
   }
 
   function handleClick(event: MouseEvent) {
-    const rect = canvas.getBoundingClientRect()
-    let x = Math.floor((event.clientX - rect.left) / squareSize)
-    let y = Math.floor((event.clientY - rect.top) / squareSize)
-    game.toggleCell(x, y)
-    drawBoard()
+    context.rect(0, 0, canvas.width, canvas.height)
+    context.fillStyle="white"
+    context.fill()
+    // const rect = canvas.getBoundingClientRect()
+    // let x = Math.floor((event.clientX - rect.left) / squareSize)
+    // let y = Math.floor((event.clientY - rect.top) / squareSize)
+    // game.toggleCell(x, y)
+    // drawBoard()
   }
 </script>
 

@@ -3,7 +3,5 @@
 </script>
 
 <template>
-  <main>
     <ConwaysViewport></ConwaysViewport>
-  </main>
 </template>
