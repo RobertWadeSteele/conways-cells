@@ -1,31 +1,21 @@
 <script setup lang='ts'>
-    import { inject } from 'vue'
-    import mitt from 'mitt'
-
-    const emitter: any = inject('conwayEmitter')
-
-    let isRunning = inject('isRunning')
-
-    function tickOnce(event: any) {
-        emitter.emit('tick-once', event)
-    }
-
-    function toggleRun(event: any) {
-        emitter.emit('toggle-run', event)
-    }
+    const props = defineProps({
+        tickFunction: Function
+    })
 </script>
 
 <template>
-    <button id="tick-once"
-            :class="isRunning ? 'stop' : 'run'"
-            @click="tickOnce($event)">
-            Tick Once</button>
-    <button id="toggle-run" @click="toggleRun($event)">Toggle Run</button>
+    <div class="control-panel">
+        <div>
+            <button class="control" @click="props.tickFunction!()">Tick</button>
+        </div>
+    </div>
 </template>
 
-<style scoped>
-    button.stop {
-        border-style: solid;
-        background-color: red;
+<style>
+    .control-panel {
+        position: absolute;
+        top: 10px;
+        left: 10px;
     }
 </style>

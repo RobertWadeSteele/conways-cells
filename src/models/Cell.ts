@@ -1,4 +1,4 @@
-export class Coord2D {
+export class Cell {
 
   x: number
   y: number
@@ -6,9 +6,5 @@ export class Coord2D {
   constructor(x: number, y: number) {
     this.x = x
     this.y = y
-  }
-
-  toKey(): string {
-    return `(${this.x}, ${this.y})`
   }
 }

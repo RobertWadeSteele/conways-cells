@@ -1,6 +1,8 @@
 <script setup lang='ts'>
   import { onMounted, inject } from 'vue'
   import { ConwaysGame } from '@/models/ConwaysGame'
+  import ConwaysControls from '@/components/ConwaysControls.vue'
+  import { Cell } from '@/models/Cell';
   
   let canvas: HTMLCanvasElement
   let context: CanvasRenderingContext2D
@@ -22,51 +24,62 @@
     context.beginPath()
     context.fillStyle = "white"
     context.strokeStyle = "dimgray"
+
     // draw vertical guidelines
-    for (let x = 0; x < canvas.offsetWidth; x += squareSize) {
+    for (let x = 0; x < canvas.width; x += squareSize) {
       context.moveTo(x, 0)
-      context.lineTo(x, canvas.offsetHeight)
+      context.lineTo(x, canvas.height)
       context.stroke()
     }
+
     // draw horizontal guidelines
-    for (let y = 0; y < canvas.offsetHeight; y += squareSize) {
+    for (let y = 0; y < canvas.height; y += squareSize) {
       context.moveTo(0, y)
-      context.lineTo(canvas.offsetWidth, y)
+      context.lineTo(canvas.width, y)
       context.stroke()
     }
-    game.cells.forEach((y_coords: Set<number>, x_coord: number) => {
-      y_coords.forEach((y_coord: number) => {
-        context.fillRect(x_coord, y_coord, squareSize, squareSize)
-      })
+
+    // draw all cells on grid
+    // TODO: find some way to limit cells to only search within visible region
+    game.cells.forEach((cell: Cell) => {
+      context.fillRect(cell.x * squareSize, cell.y * squareSize, squareSize, squareSize)
     })
-    console.log('drawn')
   }
 
-  // observer to 
   const resize_canvases_observer = new ResizeObserver((entries) => {
     for (let entry of entries) {
       let canvas: HTMLCanvasElement = entry.target as HTMLCanvasElement
       canvas.width = canvas.offsetWidth
       canvas.height = canvas.offsetHeight
-      console.log('Resized canvas...')
     }
     drawBoard()
   })
   
+  function tick() {
+    game.gameTick()
+    drawBoard()
+  }
 
   function handleClick(event: MouseEvent) {
-    let x = event.x - (event.x % squareSize)
-    let y = event.y - (event.y % squareSize)
+    let cell_x = (event.x - (event.x % squareSize)) / squareSize
+    let cell_y = (event.y - (event.y % squareSize)) / squareSize
+    // let x = event.x - (event.x % squareSize)
+    // let y = event.y - (event.y % squareSize)
     
-    game.toggleCell(event.x - (event.x % squareSize),
-                    event.y - (event.y % squareSize))
+    game.toggleCell(new Cell(cell_x, cell_y))
 
+    drawBoard()
+  }
+
+  function handleScroll(event: WheelEvent) {
+    squareSize = squareSize - event.deltaY % (0.2 * squareSize)
     drawBoard()
   }
 </script>
 
 <template>
-  <canvas id="conway-canvas" @click="handleClick($event)"></canvas>
+  <canvas id="conway-canvas" @click="handleClick($event)" @wheel="handleScroll($event)"></canvas>
+  <ConwaysControls :tick-function='tick'></ConwaysControls>
 </template>
 
 <style>
