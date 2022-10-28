@@ -9,13 +9,12 @@ import { RouterView } from 'vue-router'
 <style>
 @import '@/assets/base.css';
 
-  #app {
-    width: 100%;
-    height: 100%;
-
-    margin: 0;
-    padding: 0;
-    
-    font-weight: normal;
-  }
+#app {
+  width: 100vw;
+  height: 100%;
+  min-height: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
 </style>
