@@ -24,7 +24,19 @@
     context.beginPath()
     context.fillStyle = "white"
     context.strokeStyle = "dimgray"
+    
+    // draw all cells on grid
+    // TODO: find some way to limit cells to only search within visible region
+    // game.cells.forEach((y_coords: Set<number>, x: number) => {
+    //   y_coords.forEach((y: number) => {
+    //     context.fillRect(x * squareSize, y * squareSize, squareSize, squareSize)
+    //   })
+    // })
 
+    game.cells.forEach((x: number, y: number) => {
+      context.fillRect(x * squareSize, y * squareSize, squareSize, squareSize)
+    })
+    
     // draw vertical guidelines
     for (let x = 0; x < canvas.width; x += squareSize) {
       context.moveTo(x, 0)
@@ -39,11 +51,7 @@
       context.stroke()
     }
 
-    // draw all cells on grid
-    // TODO: find some way to limit cells to only search within visible region
-    game.cells.forEach((cell: Cell) => {
-      context.fillRect(cell.x * squareSize, cell.y * squareSize, squareSize, squareSize)
-    })
+    
   }
 
   const resize_canvases_observer = new ResizeObserver((entries) => {
@@ -61,12 +69,12 @@
   }
 
   function handleClick(event: MouseEvent) {
-    let cell_x = (event.x - (event.x % squareSize)) / squareSize
-    let cell_y = (event.y - (event.y % squareSize)) / squareSize
+    let x = (event.x - (event.x % squareSize)) / squareSize
+    let y = (event.y - (event.y % squareSize)) / squareSize
     // let x = event.x - (event.x % squareSize)
     // let y = event.y - (event.y % squareSize)
     
-    game.toggleCell(new Cell(cell_x, cell_y))
+    game.toggleCell(x, y)
 
     drawBoard()
   }
