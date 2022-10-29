@@ -43,7 +43,6 @@
     for (let y = 0; y < canvas.height; y += squareSize) {
       context.moveTo(0, y)
       context.lineTo(canvas.width, y)
-      // context.stroke()
     }
 
     context.strokeStyle = 'rgba(80, 80, 80, 1)'

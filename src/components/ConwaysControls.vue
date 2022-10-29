@@ -37,11 +37,15 @@
     .control-panel {
         position: absolute;
         bottom: 5vh;
-        left: 0px;
-        width: 100%;
-        display: flex;
+        left: 0;
+        right: 0;
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+        /* display: flex;
         align-items: center;
-        justify-content: center;
+        justify-content: center; */
+        /* background-color: green; */
     }
 
     .button-container {
