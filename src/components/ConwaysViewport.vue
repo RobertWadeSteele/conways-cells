@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-  import { onMounted, inject } from 'vue'
+  import { onMounted } from 'vue'
   import { ConwaysGame } from '@/models/ConwaysGame'
   import ConwaysControls from '@/components/ConwaysControls.vue'
   
@@ -21,6 +21,7 @@
     drawBoard()
   })
 
+  // draw the board
   function drawBoard() {
     context.clearRect(0, 0, canvas.width, canvas.height)
     context.beginPath()
@@ -74,8 +75,8 @@
   }
 
   function start() {
-    running = true
     tick()
+    running = true 
     run()
   }
 
@@ -91,6 +92,10 @@
         run()
       }, delay)
     }
+  }
+
+  function loop() {
+    
   }
 
   function handleClick(event: MouseEvent) {
@@ -111,14 +116,28 @@
   }
 
   function clearBoard() {
+    if (running) {
+      stop()
+    }
     game.clear()
     drawBoard()
+  }
+
+  function updateDelay(input: HTMLInputElement) {
+    delay = parseInt(input.value)
+    if (running) {
+      stop()
+      start()
+    }
   }
 </script>
 
 <template>
   <canvas id="conway-canvas" @mousedown="handleClick($event)" @wheel="handleScroll($event)"></canvas>
-  <ConwaysControls :tick-function='toggleRun' :clear-function='clearBoard'></ConwaysControls>
+  <ConwaysControls  :tick-function='toggleRun'
+                    :clear-function='clearBoard'
+                    :update-delay-callback="updateDelay"
+                    :isRunning="running"></ConwaysControls>
 </template>
 
 <style>

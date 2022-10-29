@@ -2,15 +2,24 @@
     const props = defineProps({
         tickFunction: Function,
         clearFunction: Function,
+        updateDelayCallback: Function,
+        isRunning: Boolean,
     })
+
+    function updateDelay(event: any) {
+        console.log(event)
+        props.updateDelayCallback!(event.target)
+    }
 </script>
 
 <template>
     <div class="control-panel">
         <div class="button-container">
-            <button class="control" @click="props.tickFunction!()">Tick</button>
+            <button class="control" @click="props.tickFunction!()" :class="{running : props.isRunning}">Start</button>
             <button class="control" @click="props.clearFunction!()">Clear</button>
             <button class="control">Help</button>
+            <input class="control-slider" type="range" min="4" max="500" value="250" @change='updateDelay($event)'/>
+            <output>{{props.isRunning}}</output>
         </div>
     </div>
 </template>
