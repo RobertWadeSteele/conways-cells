@@ -7,6 +7,9 @@
   let context: CanvasRenderingContext2D
   let game: ConwaysGame = new ConwaysGame()
   let squareSize: number = 20
+  let running: boolean = false
+  let timeoutID: number = 0
+  let delay: number = 250
 
   // initialize the conway canvas
   onMounted(() => {
@@ -22,16 +25,9 @@
     context.clearRect(0, 0, canvas.width, canvas.height)
     context.beginPath()
     context.fillStyle = "white"
-    context.strokeStyle = "dimgray"
-    
-    // draw all cells on grid
-    // TODO: find some way to limit cells to only search within visible region
-    // game.cells.forEach((y_coords: Set<number>, x: number) => {
-    //   y_coords.forEach((y: number) => {
-    //     context.fillRect(x * squareSize, y * squareSize, squareSize, squareSize)
-    //   })
-    // })
 
+    // draw each cell
+    // TODO: limit drawing to visible space
     game.cells.forEach((x: number, y: number) => {
       context.fillRect(x * squareSize, y * squareSize, squareSize, squareSize)
     })
@@ -40,19 +36,20 @@
     for (let x = 0; x < canvas.width; x += squareSize) {
       context.moveTo(x, 0)
       context.lineTo(x, canvas.height)
-      context.stroke()
     }
 
     // draw horizontal guidelines
     for (let y = 0; y < canvas.height; y += squareSize) {
       context.moveTo(0, y)
       context.lineTo(canvas.width, y)
-      context.stroke()
+      // context.stroke()
     }
 
-    
+    context.strokeStyle = 'rgba(80, 80, 80, 1)'
+    context.stroke()
   }
 
+  // watches to ensure the canvas used to draw the game maintains its resolution
   const resize_canvases_observer = new ResizeObserver((entries) => {
     for (let entry of entries) {
       let canvas: HTMLCanvasElement = entry.target as HTMLCanvasElement
@@ -62,16 +59,46 @@
     drawBoard()
   })
   
+  // a function to advance the game by one tick and redraw the board
   function tick() {
     game.gameTick()
     drawBoard()
   }
 
+  function toggleRun() {
+    if (running) {
+      stop()
+    } else {
+      start()
+    }
+  }
+
+  function start() {
+    running = true
+    tick()
+    run()
+  }
+
+  function stop() {
+    running = false
+    clearTimeout(timeoutID)
+  }
+
+  function run() {
+    if (running) {
+      timeoutID = setTimeout(() => {
+        tick()
+        run()
+      }, delay)
+    }
+  }
+
   function handleClick(event: MouseEvent) {
+    if (running == true) {
+      return
+    }
     let x = (event.x - (event.x % squareSize)) / squareSize
     let y = (event.y - (event.y % squareSize)) / squareSize
-    // let x = event.x - (event.x % squareSize)
-    // let y = event.y - (event.y % squareSize)
     
     game.toggleCell(x, y)
 
@@ -82,11 +109,16 @@
     squareSize = squareSize - event.deltaY % (0.2 * squareSize)
     drawBoard()
   }
+
+  function clearBoard() {
+    game.clear()
+    drawBoard()
+  }
 </script>
 
 <template>
-  <canvas id="conway-canvas" @click="handleClick($event)" @wheel="handleScroll($event)"></canvas>
-  <ConwaysControls :tick-function='tick'></ConwaysControls>
+  <canvas id="conway-canvas" @mousedown="handleClick($event)" @wheel="handleScroll($event)"></canvas>
+  <ConwaysControls :tick-function='toggleRun' :clear-function='clearBoard'></ConwaysControls>
 </template>
 
 <style>

@@ -60,11 +60,9 @@ export class ConwaysGame {
             
             if (deadNeighbors.length == 6 || deadNeighbors.length == 5) {
                 liveCells.add(x, y)
-            } else {
-                console.log(deadNeighbors.length)
             }
-
-            deadNeighbors.forEach((x: number, y: number) => {
+            
+                deadNeighbors.forEach((x: number, y: number) => {
                 let temp = this.getDeadNeighbors(x, y)
 
                 if (temp.length == 5) {
@@ -73,29 +71,11 @@ export class ConwaysGame {
             })
         })
 
-        // this.cells.forEach((y_coords: Set<number>, x: number) => {
-        //     y_coords.forEach((y: number) => {
-        //         let deadNeighbors = this.getDeadNeighbors(x, y)
-
-        //         if (deadNeighbors.length == 6 || deadNeighbors.length == 5) {
-        //             if (liveCells.has(x)) {
-        //                 liveCells.get(x)!.add(y)
-        //             } else {
-        //                 let new_set: Set<number> = new Set()
-        //                 new_set.add(y)
-        //                 liveCells.set(x, new_set)
-        //             }
-        //         }
-
-        //         deadNeighbors.forEach((cell: Cell) => {
-        //             if (!liveCells.has(cell) && this.getDeadNeighbors(cell).length == 5) {
-        //                 liveCells.add(cell)
-        //             }
-        //         })
-        //     })
-        // })
-
         this.cells = liveCells
+    }
+
+    clear(): void {
+        this.cells.clear()
     }
 }
 
@@ -149,5 +129,9 @@ class BinaryCellGrid {
                 callbackfn(x, y)
             })
         })
+    }
+
+    clear(): void {
+        this.cells = new Map()
     }
 }
