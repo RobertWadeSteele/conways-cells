@@ -2,7 +2,6 @@
   import { onMounted, inject } from 'vue'
   import { ConwaysGame } from '@/models/ConwaysGame'
   import ConwaysControls from '@/components/ConwaysControls.vue'
-  import { Cell } from '@/models/Cell';
   
   let canvas: HTMLCanvasElement
   let context: CanvasRenderingContext2D
