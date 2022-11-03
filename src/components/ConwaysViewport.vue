@@ -43,18 +43,14 @@ function drawBoard() {
     context.lineTo(x, canvas.height);
   }
 
-    // draw horizontal guidelines
-    for (let y = 0; y < canvas.height; y += squareSize) {
-      context.moveTo(0, y)
-      context.lineTo(canvas.width, y)
-    }
-
-    context.strokeStyle = 'rgba(80, 80, 80, 1)'
-    context.stroke()
+  // draw horizontal guidelines
+  for (let y = 0; y < canvas.height; y += squareSize) {
+    context.moveTo(0, y)
+    context.lineTo(canvas.width, y)
   }
 
-  context.strokeStyle = "rgba(80, 80, 80, 1)";
-  context.stroke();
+  context.strokeStyle = 'rgba(80, 80, 80, 1)'
+  context.stroke()
 }
 
 // ----------------------- Observers ---------------------------- //
