@@ -46,15 +46,19 @@ function updateDelay(event: Event) {
   border-radius: 10px;
 }
 
-.control-panel {
-  position: absolute;
-  bottom: 5vh;
-  left: 0px;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+    .control-panel {
+        position: absolute;
+        bottom: 5vh;
+        left: 0;
+        right: 0;
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+        /* display: flex;
+        align-items: center;
+        justify-content: center; */
+        /* background-color: green; */
+    }
 
 .button-container {
   /* width: 100%; */
