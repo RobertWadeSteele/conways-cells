@@ -1,37 +1,42 @@
 <script setup lang="ts">
+import { toRef } from 'vue';
+
 const props = defineProps({
-  tickFunction: Function,
+  toggleRun: Function,
   clearFunction: Function,
   updateDelayCallback: Function,
-  isRunning: Boolean,
+  isRunning: Boolean
 });
+
+function toggleRun() {
+  props.toggleRun!()
+  console.log(props.isRunning)
+}
 
 function updateDelay(event: Event) {
   props.updateDelayCallback!(event.target);
 }
+
+let running = toRef(props, 'isRunning')
 </script>
 
 <template>
     <div class="control-container">
       <div class="control-panel">
-        <button
-        class="control"
-        @click="props.tickFunction!()"
-        :class="{ running: props.isRunning }"
-        >
-          Start
-        </button>
-        <button class="control" @click="props.clearFunction!()">Clear</button>
+        <button class="control"
+                @click="toggleRun()"
+        >Start</button>
+        <button class="control"
+                @click="props.clearFunction!()"
+        >Clear</button>
         <button class="control">Help</button>
-        <input
-          class="control-slider"
-          type="range"
-          min="4"
-          max="500"
-          value="250"
-          @change="updateDelay($event)"
-        />
-        <output>{{ props.isRunning }}</output>
+        <input  class="control-slider"
+                type="range"
+                min="4"
+                max="500"
+                value="250"
+                @change="updateDelay($event)"/>
+        <output>{{running}}</output>
       </div>
     </div>
 </template>
